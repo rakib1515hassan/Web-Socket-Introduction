@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Web Socket</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color:red;">Web Socket</h1>
+    
+    <p>Massage receive = <span id="massage"></span></p>
+
+    <!-- <p>Name = <span id="name"></span></p>
+    <p>Age = <span id="age"></span></p>
+    <p>Address = <span id="address"></span></p> -->
+    <div>
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td id="name"></td>
+                <td id="age"></td>
+                <td id="address"></td>
+              </tr>
+    </div>
+    </div>
+
+
+
+	<script>
+        // AsyncConsumer এর Data দেখাতে চাইলে URL = ( ws://127.0.0.1:8000/ws/ac/ )
+		var ws = new WebSocket('ws://127.0.0.1:8000/ws/sc/');  
+
+        var text_message = document.getElementById('text_message')
+        console.log(text_message)
+
+		ws.onopen = function() {
+			console.log('Websocket connection open........')
+            ws.send('Hi')
+		}
+        
+
+        ws.onmessage = function() {
+            // console.log('Received Message is = ', event)
+            // console.log('Received Message is = ', event['data'])
+
+            // // Html এ Data show করানো হয়েছে।
+            document.getElementById('massage').innerText = event.data
+            // console.log("Type of event data =", typeof(event.data))
+
+            // এখন json string কে javascript object এ রূপান্তর করতে হবে 
+            var javascript_obj = JSON.parse(event.data) 
+            document.getElementById('name').innerText = javascript_obj.Name
+            document.getElementById('age').innerText = javascript_obj.Age
+            document.getElementById('address').innerText = javascript_obj.Address
+
+        }
+ 
+
+        ws.onerror = function() {
+            console.log('Websocket Error Occoured.......', event)
+        }
+
+
+        ws.onclose = function() {
+            console.log('Websocket connection is Closed.......', event)
+        }
+
+
+
+
+
+
+        // NOTE Alternative Way AddEventListener--------------------------------------
+
+
+        // ws.addEventListener('open', ()=> {
+        //     console.log('Websocket connection open........')
+        //     ws.send('Hi')
+        // })
+
+
+        // ws.addEventListener('message', (event)=> {
+        //     console.log('Received Message is = ', event['data'])
+        // })
+
+
+        // ws.addEventListener('error', (event)=> {
+        //     console.log('Websocket Error Occoured.......', event)
+        // })
+
+
+        // ws.addEventListener('close', (event)=> {
+        //     console.log('Websocket connection is Closed.......', event)
+        // })
+
+	</script>
+</body>
+
+</html>
